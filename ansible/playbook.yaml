@@ -62,7 +62,7 @@
 
     - name: Add nginx config to sites-available
       template: 
-        src=/home/yura/deploy_django1/site-available.j2
+        src=/home/yura/ci-cd_cifar10/site-available.j2
         dest=/etc/nginx/sites-available/{{ host }}
       notify:
         - Restart nginx
@@ -88,7 +88,7 @@
 
     - name: Write gunicorn service script
       template: 
-        src=/home/yura/deploy_django1/gunicorn.j2
+        src=/home/yura/ci-cd_cifar10/gunicorn.j2
         dest=/etc/systemd/system/gunicorn-{{ host }}.service
       notify:
         - Restart gunicorn
@@ -105,7 +105,7 @@
     
     - name: Create .env file
       template: 
-        src=/home/yura/deploy_django1/dotenv.j2
+        src=/home/yura/ci-cd_cifar10/dotenv.j2
         dest=/home/{{ ansible_user }}/sites/{{ host }}/.env
       tags:
         - dotenv
