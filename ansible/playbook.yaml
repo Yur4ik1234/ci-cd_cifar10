@@ -16,7 +16,7 @@
 
     - name: Make sure required packages are installed
       apt: 
-        pkg=nginx,git,python3.9,python3.9-venv,gettext
+        pkg=nginx,git,python3,python3-venv,gettext
         state=present
     
 
