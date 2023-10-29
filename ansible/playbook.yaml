@@ -17,6 +17,16 @@
       apt_repository:
         repo='ppa:deadsnakes/ppa'
 
+    - name: Update package lists
+      apt: update_cache=yes
+      become: yes
+
+    - name: Install Python 3.9
+      apt:
+        name: python3.9
+        state: present
+      become: yes
+      
     - name: Make sure required packages are installed
       apt: 
         pkg=nginx,git,python3.9,python3.9-venv,gettext
