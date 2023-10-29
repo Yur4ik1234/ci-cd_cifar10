@@ -149,8 +149,8 @@ resource "azurerm_virtual_machine_scale_set" "vmss-1" {
 
 storage_profile_image_reference {
    publisher = "Canonical"
-   offer     = "UbuntuServer"
-   sku       = "20.04-LTS"
+   offer     = "0001-com-ubuntu-server-foca"
+   sku       = "20_04-lts-gen2"
    version   = "latest"
  }
 
