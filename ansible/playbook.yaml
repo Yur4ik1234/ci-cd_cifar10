@@ -70,17 +70,17 @@
 
     - name: Create Nginx configuration file
       ansible.builtin.copy:
-      content: |
-        server {
-          listen 80;
-          server_name {{ host }};
+        content: |
+          server {
+            listen 80;
+            server_name {{ host }};
 
-          location / {
-              proxy_pass http://unix:/tmp/{{ host }}.socket;
-              proxy_set_header Host $host;
+            location / {
+                proxy_pass http://unix:/tmp/{{ host }}.socket;
+                proxy_set_header Host $host;
+            }
           }
-        }
-      dest: /etc/nginx/sites-available/{{ host }}
+        dest: /etc/nginx/sites-available/{{ host }}
 
 
     - name: Add symlink in nginx sites-enabled
