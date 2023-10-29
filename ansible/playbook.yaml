@@ -29,7 +29,7 @@
       
     - name: Make sure required packages are installed
       apt: 
-        pkg=nginx,git,python3.8,python3.8-venv,gettext
+        pkg=nginx,git,python3.9,python3.9-venv,gettext
         state=present
     
 
@@ -39,16 +39,11 @@
         repo: https://github.com/Yur4ik1234/CIFAR-10-flask.git
         dest: /home/{{ ansible_user }}/sites/{{ host }}
     
-    - name: Install python3-venv package
-      apt:
-        name: python3.8-venv
-        state: present
-
     - name: Install dependencies
       pip:
         requirements: /home/{{ ansible_user }}/sites/{{ host }}/requirements.txt
         virtualenv: /home/{{ ansible_user }}/sites/{{ host }}/venv/
-        virtualenv_command: /usr/bin/python3.8 -m venv
+        virtualenv_command: /usr/bin/python3.9 -m venv
  
   
     - name: Set permissions
