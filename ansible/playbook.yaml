@@ -1,6 +1,9 @@
 
 - hosts: all
+  ignore_unreachable: true
+  become: true
   gather_facts: no
+
   vars:
       host: "{{ inventory_hostname }}"
       ansible_user: "adminuser"
