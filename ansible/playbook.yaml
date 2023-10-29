@@ -9,6 +9,9 @@
       ansible_user: "adminuser"
   tasks:
   
+    - name: Run apt update
+      command: apt update
+
     - name: Deadsnakes PPA to get Python 3.9
       become: yes
       apt_repository:
