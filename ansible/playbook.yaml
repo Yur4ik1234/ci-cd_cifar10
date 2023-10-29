@@ -39,6 +39,11 @@
         repo: https://github.com/Yur4ik1234/CIFAR-10-flask.git
         dest: /home/{{ ansible_user }}/sites/{{ host }}
     
+    - name: Install python3-venv package
+      apt:
+        name: python3.8-venv
+        state: present
+
     - name: Install dependencies
       pip:
         requirements: /home/{{ ansible_user }}/sites/{{ host }}/requirements.txt
