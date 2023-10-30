@@ -185,6 +185,31 @@ jobs:
     - name: Terraform Apply
       
       run: terraform apply -auto-approve tfplan
+  # use script
+  deploy:
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9  
+
+    - name: Install Azure CLI
+      run: |
+        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+        az extension add --name vmss
+
+    - name: List VMSS Instance Public IPs
+      run: |
+        az vmss list-instance-public-ips --name example-vmss --resource-group azure-resource_group | python3 parser.py > ip.txt
+      working-directory: ${{ github.workspace }}
+
+    - name: Append IPs to host.txt
+      run: |
+        python3 iphost.py >> host.txt
+      working-directory: ${{ github.workspace }}
 
     # deploying ansible 
   ansible-deploy:
