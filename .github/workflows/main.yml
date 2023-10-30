@@ -198,10 +198,10 @@ jobs:
       with:
         python-version: 3.9  
 
-    - name: Install Azure CLI
-      run: |
-        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-        az extension add --name vmss
+    #- name: Install Azure CLI
+    #  run: |
+    #    curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+    #    az extension add --name vmss
 
     - name: List VMSS Instance Public IPs
       run: |
