@@ -225,7 +225,7 @@ jobs:
         git config --global user.name "Yur4ik1234"
         git add ip.txt host.txt
         git commit -m "Update IPs"
-        git push https://$GH_PAT@github.com/Yur4ik1234/ci-cd_cifar10.git HEAD:main
+        git push https://$GH_PAT@github.com/Yur4ik1234/ci-cd_cifar10.git HEAD:master
       env: 
         GH_PAT: ${{ secrets.GH_PAT }}  
       working-directory: ${{ github.workspace }}
