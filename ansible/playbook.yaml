@@ -128,7 +128,7 @@
           
           [Install]
           WantedBy=multi-user.target
-        dest: dest=/etc/systemd/system/gunicorn-{{ host }}.service
+        dest: /etc/systemd/system/gunicorn-{{ host }}.service
       notify:
         - Restart gunicorn
       tags:
