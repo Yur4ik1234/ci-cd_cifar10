@@ -9,14 +9,27 @@
       ansible_user: "adminuser"
   tasks:
   
+    - name: Run apt update
+      command: apt update
+
     - name: Deadsnakes PPA to get Python 3.9
       become: yes
       apt_repository:
         repo='ppa:deadsnakes/ppa'
 
+  #  - name: Update package lists
+  #    apt: update_cache=yes
+  #    become: yes
+
+   # - name: Install Python 3.9
+    #  apt:
+     #   name: python3.9
+      #  state: present
+      #become: yes
+      
     - name: Make sure required packages are installed
       apt: 
-        pkg=nginx,git,python3,python3-venv,gettext
+        pkg=nginx,git,python3.9,python3.9-venv,gettext
         state=present
     
 
@@ -30,7 +43,7 @@
       pip:
         requirements: /home/{{ ansible_user }}/sites/{{ host }}/requirements.txt
         virtualenv: /home/{{ ansible_user }}/sites/{{ host }}/venv/
-        virtualenv_command: /usr/bin/python3 -m venv
+        virtualenv_command: /usr/bin/python3.9 -m venv
  
   
     - name: Set permissions
@@ -47,14 +60,29 @@
         append: yes
       when: not ansible_check_mode
 
-    - name: Add nginx config to sites-available
-      template: 
-        src=/home/yura/deploy_django1/site-available.j2
-        dest=/etc/nginx/sites-available/{{ host }}
-      notify:
-        - Restart nginx
-      tags: nginx
-    
+    #- name: Add nginx config to sites-available
+    #  template: 
+    #    src=./site-available.j2
+    #    dest=/etc/nginx/sites-available/{{ host }}
+    #  notify:
+    #    - Restart nginx
+    #  tags: nginx
+
+    - name: Create Nginx configuration file
+      ansible.builtin.copy:
+        content: |
+          server {
+            listen 80;
+            server_name {{ host }};
+
+            location / {
+                proxy_pass http://unix:/tmp/{{ host }}.socket;
+                proxy_set_header Host $host;
+            }
+          }
+        dest: /etc/nginx/sites-available/{{ host }}
+
+
     - name: Add symlink in nginx sites-enabled
       file:
           src=/etc/nginx/sites-available/{{ host }}
@@ -73,10 +101,34 @@
         - Restart nginx
   
 
-    - name: Write gunicorn service script
-      template: 
-        src=/home/yura/deploy_django1/gunicorn.j2
-        dest=/etc/systemd/system/gunicorn-{{ host }}.service
+  #  - name: Write gunicorn service script
+  #    template: 
+  #      src=./gunicorn.j2
+  #      dest=/etc/systemd/system/gunicorn-{{ host }}.service
+  #    notify:
+  #      - Restart gunicorn
+  #    tags:
+  #      - gunicorn
+
+    - name: Create Gunicorn systemd service unit file
+      ansible.builtin.copy:
+        content: |
+          [Unit]
+          Description=Gunicorn server for {{ host }}
+          
+          [Service]
+          Restart=on-failure
+          User=root
+          WorkingDirectory=/home/{{ ansible_user }}/sites/{{ host }}
+          EnvironmentFile=/home/{{ ansible_user }}/sites/{{ host }}/.env
+          
+          ExecStart=/home/{{ ansible_user }}/sites/{{ host }}/venv/bin/gunicorn \
+              --bind unix:/tmp/{{ host }}.socket \
+              app:app
+          
+          [Install]
+          WantedBy=multi-user.target
+        dest: /etc/systemd/system/gunicorn-{{ host }}.service
       notify:
         - Restart gunicorn
       tags:
@@ -89,13 +141,20 @@
 #        virtualenv: "/home/{{ ansible_user }}/sites/{{ host }}/venv"
 #      tags:
 #        - static
-    
     - name: Create .env file
-      template: 
-        src=/home/yura/deploy_django1/dotenv.j2
-        dest=/home/{{ ansible_user }}/sites/{{ host }}/.env
-      tags:
-        - dotenv
+      ansible.builtin.copy:
+        content: |
+          IS_DJANGO_DEBUG_FALSE=y
+          DEBUG=False
+          SITENAME={{ host }}
+        dest: /home/{{ ansible_user }}/sites/{{ host }}/.env
+
+   # - name: Create .env file
+   #   template: 
+   #     src=./dotenv.j2
+   #     dest=/home/{{ ansible_user }}/sites/{{ host }}/.env
+   #   tags:
+   #     - dotenv
     
     - name: Write SECRET_KEY to .env
       ansible.builtin.lineinfile:
