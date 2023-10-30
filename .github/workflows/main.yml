@@ -248,10 +248,10 @@ jobs:
         # Optional, SSH private key
         key: ${{secrets.SSH_PRIVATE_KEY}}
         # Optional, literal inventory file contents
-        inventory: |
-          vm1.deploy-vmsc-ubuntu.westeurope.cloudapp.azure.com ansible_become=yes ansible_ssh_user=adminuser
-          vm0.deploy-vmsc-ubuntu.westeurope.cloudapp.azure.com ansible_become=yes ansible_ssh_user=adminuser
-        
-
+        #inventory: |
+        #  vm1.deploy-vmsc-ubuntu.westeurope.cloudapp.azure.com ansible_become=yes ansible_ssh_user=adminuser
+        #  vm0.deploy-vmsc-ubuntu.westeurope.cloudapp.azure.com ansible_become=yes ansible_ssh_user=adminuser
+        inventory: host.txt
+        working-directory: ${{ github.workspace }}
           
           
