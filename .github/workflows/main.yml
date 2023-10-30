@@ -252,7 +252,7 @@ jobs:
         #inventory: |
         #  vm1.deploy-vmsc-ubuntu.westeurope.cloudapp.azure.com ansible_become=yes ansible_ssh_user=adminuser
         #  vm0.deploy-vmsc-ubuntu.westeurope.cloudapp.azure.com ansible_become=yes ansible_ssh_user=adminuser
-        inventory: inventory.ini
+        inventory: ./host.txt 
         #working-directory: ${{ github.workspace }}
           
           
