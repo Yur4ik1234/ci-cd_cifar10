@@ -171,10 +171,11 @@ storage_profile_image_reference {
    os_profile {
     computer_name_prefix = "testvm"
     admin_username       = "adminuser"
+    admin_password       = "Yura111!"
    }
 
    os_profile_linux_config {
-    disable_password_authentication = true
+    disable_password_authentication = false
 
   ssh_keys {
     key_data = var.ssh
