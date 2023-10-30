@@ -4,9 +4,11 @@ on:
   push:
     branches:
     - master
+    - new-branch-name
   pull_request:
     branches:
     - master
+    - new-branch-name
 #ffdfdfdfdf
 
 #Special permissions required for OIDC authentication
